@@ -1,0 +1,20 @@
+package_names=['playwright', 'requests'] #packages to install
+pip.main(['install'] + package_names + ['--upgrade'])
+# --upgrade to install or update existing packages
+
+from playwright.sync_api import sync_playwright
+
+url = "https://www."
+
+with sync_playwright() as p:
+    browser = p.chromium.launch()
+    page = browser.new_page()
+
+    page.on("response", lambda response: print(
+        "<<", response.status, response.url))
+    page.goto(url, wait_until="networkidle", timeout=90000)
+
+    print(page.content())
+
+    page.context.close()
+    browser.close()
